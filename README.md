@@ -5,7 +5,7 @@ Balsamiq to HTML is a class to create an HTML version of a Balsamiq project (fro
 # Usage
 
 Create 2 directories in the same folder as `Balsamiq2html.class.php`, named `source` and `images`:
-- source: put the exported .bmml files and the asset folder there
+- source: put the exported .bmml files and the assets folder there
 - images: put the exported .png files there
 
 Require `Balsamiq2html.class.php` and run

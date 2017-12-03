@@ -13,7 +13,8 @@ class Balsamiq2html {
 	];
 	private $styles = [
 		'body' => [
-			'margin: 0'
+			'margin: 0',
+			'overflow-Y: scroll'
 		],
 		'a' => [
 			'background: red',
@@ -129,9 +130,15 @@ class Balsamiq2html {
 				}
 				
 				// icons have no specified dimensions
-				if (!isset($link['w'])) {
+				if (!isset($link['h']) or !isset($link['w'])) {
 					
 					switch($control['controlTypeID']){
+						
+						case 'com.balsamiq.mockups::ComboBox':
+							
+							$link['h'] = '25';
+							
+							break;
 						
 						case 'com.balsamiq.mockups::Icon':
 							
@@ -154,21 +161,26 @@ class Balsamiq2html {
 						
 							$link['w'] = '16';
 							
+							$link['h'] = $link['w'];
+							
 							break;
 						
 						case 'com.balsamiq.mockups::Button':
 							
 							// sometimes buttons don't have a specific with, it's computed by Balsamiq
-							// according to the text inside. We'll set 120px arbitrarily.
-							$link['w'] = '120';
+							// according to the text inside. So we count the number of characters too.
+							// It's not accurate though because the font is not monospaced.
+							$link['w'] = strlen(rawurldecode($control->controlProperties->text)) * 6;
+							
+							if(!isset($link['h'])) {
+								$link['h'] = '22';
+							}
 							
 							break;
 						
 						default:
 							echo 'Type not defined, what about a pull request? ;) => '.$control['controlTypeID'];
 					}
-					
-					$link['h'] = $link['w'];
 				}
 				
 				$links[] = $link;

@@ -282,7 +282,10 @@ class Balsamiq2html {
 				
 				if (filetype($filepath) == 'file' && substr($file, strlen($file) - 5) == '.bmml') {
 					
-					echo 'Processing '.$file.' ...<br />';
+					// for some reason, in php7 the file name is already in utf8, not in php5
+					$file_utf8 = mb_detect_encoding($file, 'UTF-8', true) ? $file : utf8_encode($file);
+		
+					echo 'Processing '.$file_utf8.' ...<br />';
 					
 					$xml = simplexml_load_file($filepath);
 					
@@ -302,7 +305,7 @@ class Balsamiq2html {
 						$title = str_replace('.bmml', '', $file);
 					}
 					
-					echo 'title = '.$file.'<br /><br />';
+					echo 'title = '.$file_utf8.'<br /><br />';
 					
 					$imagepath = $this->dirs['images'].'/'.str_replace('.bmml', '.png', $file);
 					
@@ -328,11 +331,14 @@ class Balsamiq2html {
 			}
 			while (($file = readdir($dh)) !== false) {
 				
+				// for some reason, in php7 the file name is already in utf8, not in php5
+				$file_utf8 = mb_detect_encoding($file, 'UTF-8', true) ? $file : utf8_encode($file);
+				
 				$filepath = $this->dirs['images'] .'/'. $file;
 				
 				if (filetype($filepath) == 'file' &&  substr($file, strlen($file) - 4) == '.png') {
 					
-					echo 'Copying '.$file.' ...<br />';
+					echo 'Copying '.$file_utf8.' ...<br />';
 					
 					copy($filepath, $this->dirs['dest'] .'/images/'.$this->__cleanFileName($file, 'png'));
 				}

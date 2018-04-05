@@ -288,8 +288,15 @@ class Balsamiq2html {
 					echo 'Processing '.$file_utf8.' ...<br />';
 					
 					$xml = simplexml_load_file($filepath);
+					$x = 0;
+					$y = 0;
+					$attrs = $xml->attributes();
+					if (isset($attrs['mockupW']) && isset($attrs['measuredW']) && isset($attrs['mockupH']) && isset($attrs['measuredH'])) {
+						$x = $attrs['mockupW'] - $attrs['measuredW'];
+						$y = $attrs['mockupH'] - $attrs['measuredH'];
+					}
 					
-					$links = $this->__crossControlList($xml->controls);
+					$links = $this->__crossControlList($xml->controls, $x, $y);
 					
 					usort($links, array('balsamiq2html','sort_list'));
 					
